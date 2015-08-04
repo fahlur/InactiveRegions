@@ -3,11 +3,12 @@ package me.Fahlur.InactiveRegions;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -24,6 +25,8 @@ public class main extends JavaPlugin  {
 	Plugin plugin = this;
 	public static Essentials ess3 = null;
 	public static WorldGuardPlugin wg = null;
+	List<String> oNames = new ArrayList<String>();
+	
 	
 	@Override
 	public void onEnable(){
@@ -60,28 +63,33 @@ public class main extends JavaPlugin  {
 			int i = 1;
 			RegionManager worldGuard = wg.getRegionManager(player.getWorld());
 			Map<String, ProtectedRegion> regionList = worldGuard.getRegions();
-			List<String> oNames = new ArrayList<String>();
+			
 			
 			for(Entry<String, ProtectedRegion> list : regionList.entrySet()){
 				String newList = list.getValue().getId();
 				if (!newList.equalsIgnoreCase("__global__")){
-					Set<String> owners = list.getValue().getOwners().getPlayers();
-					int getCount = owners.size();
-				
-					if(!owners.contains("server")){
-						if(getCount == 1){
-							for(String o : owners){
-								//long maxInactiveDays = 7776000000L;
-								long maxInactiveDays = 60000;
-								long lastOnline = ess3.getUser(o).getLastLogout();	
-								long difference = lastOnline+maxInactiveDays;
-								if(System.currentTimeMillis() > difference){
-									oNames.add(newList);
-								}					
-							}
-						}
-					}
+					String owners = list.getValue().getOwners().toPlayersString().trim().replace("uuid:", "");
 					
+					
+					if(!owners.contains("server")){
+					
+							if(!owners.contains(",")){
+								long maxInactiveDays = 7776000000L;
+								OfflinePlayer getPlayer = Bukkit.getServer().getOfflinePlayer(UUID.fromString(owners));
+								@SuppressWarnings("deprecation")
+								long lastLogout = ess3.getUser(getPlayer).getLastLogout();	
+								@SuppressWarnings("deprecation")
+								long lastLogin = ess3.getUser(getPlayer).getLastLogin();	
+								if(lastLogout > lastLogin){
+									long difference = lastLogout+maxInactiveDays;
+									if(System.currentTimeMillis() > difference){
+										oNames.add(newList);
+									}					
+								
+								}
+							}
+						
+					}
 					
 					
 				}
