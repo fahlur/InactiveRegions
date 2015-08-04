@@ -66,14 +66,18 @@ public class main extends JavaPlugin  {
 				String newList = list.getValue().getId();
 				if (!newList.equalsIgnoreCase("__global__")){
 					Set<String> owners = list.getValue().getOwners().getPlayers();
-					for(String o : owners){
-						long maxInactiveDays = 7776000000L;
-						long lastOnline = ess3.getUser(o).getLastLogout();	
-						long difference = lastOnline+maxInactiveDays;
-						if(System.currentTimeMillis() > difference){
-							oNames.add(newList);
-						}					
+					int getCount = owners.size();
+					if(getCount == 1){
+						for(String o : owners){
+							long maxInactiveDays = 7776000000L;
+							long lastOnline = ess3.getUser(o).getLastLogout();	
+							long difference = lastOnline+maxInactiveDays;
+							if(System.currentTimeMillis() > difference){
+								oNames.add(newList);
+							}					
+						}
 					}
+					
 				}
 			}
 			
