@@ -1,0 +1,16 @@
+name: InactiveRegions
+version: 1.0.0
+description: Utility Plugin
+depend: [Vault]
+author: Fahlur
+main: me.Fahlur.InactiveRegions.main
+
+commands:
+  oldregions:
+      description: Displays entire list of inactive regions
+      aliases: [or]
+      usage: /<command>
+    
+Permissions:
+  InactiveRegionsList:
+    description: Allows use of oldregions command
