@@ -13,6 +13,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.earth2me.essentials.Essentials;
@@ -25,6 +26,7 @@ public class main extends JavaPlugin  {
 	Plugin plugin = this;
 	public static Essentials ess3 = null;
 	public static WorldGuardPlugin wg = null;
+	PluginDescriptionFile pdfFile = this.getDescription();
 	List<String> oNames = new ArrayList<String>();
 	
 	
@@ -36,7 +38,7 @@ public class main extends JavaPlugin  {
 	}
 	
 	public void onDisable(){
-		Bukkit.getLogger().warning("[InactiveRegions] Disabled!");
+		Bukkit.getLogger().info("[InactiveRegions] Disabled!");
 	}
 	
 	public void loadConfiguration() {
@@ -44,6 +46,16 @@ public class main extends JavaPlugin  {
 		this.saveConfig();
 	}
 	
+	public boolean isUUID(String string) {
+	    try {
+	        UUID.fromString(string);
+	        return true;
+	    } catch (Exception ex) {
+	        return false;
+	    }
+	}
+	
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!(sender instanceof Player)) {
@@ -57,6 +69,13 @@ public class main extends JavaPlugin  {
 			player.sendMessage(ChatColor.DARK_RED + "You do not have permission to do this!");
 			return true;
 		}
+		
+		
+		if(cmd.getName().equalsIgnoreCase("inactiveregions")){
+			player.sendMessage(ChatColor.GOLD + pdfFile.getName()  + " " + ChatColor.WHITE + pdfFile.getVersion());
+			player.sendMessage(ChatColor.GOLD + "Author(s): " + ChatColor.WHITE + pdfFile.getAuthors());
+			player.sendMessage(ChatColor.GOLD + "Description: " + ChatColor.WHITE + pdfFile.getDescription());
+		}
 	
 		if(cmd.getName().equalsIgnoreCase("oldregions")){
 			
@@ -68,17 +87,26 @@ public class main extends JavaPlugin  {
 			for(Entry<String, ProtectedRegion> list : regionList.entrySet()){
 				String newList = list.getValue().getId();
 				if (!newList.equalsIgnoreCase("__global__")){
+	
 					String owners = list.getValue().getOwners().toPlayersString().trim().replace("uuid:", "");
+					ProtectedRegion isChild = list.getValue().getParent();
 					
 					
-					if(!owners.contains("server")){
+				
+					
+					if(!owners.contains("server") && owners != null && !owners.isEmpty() && isChild == null){
 					
 							if(!owners.contains(",")){
-								long maxInactiveDays = 7776000000L;
+								if(!isUUID(owners)){
+									owners = list.getValue().getOwners().toPlayersString().trim().replace("name:", "");
+									owners = Bukkit.getServer().getOfflinePlayer(owners).getUniqueId().toString();
+								}
+								
+								long maxInactiveDays = 7776000000L; //7776000000L
+
+								
 								OfflinePlayer getPlayer = Bukkit.getServer().getOfflinePlayer(UUID.fromString(owners));
-								@SuppressWarnings("deprecation")
 								long lastLogout = ess3.getUser(getPlayer).getLastLogout();	
-								@SuppressWarnings("deprecation")
 								long lastLogin = ess3.getUser(getPlayer).getLastLogin();	
 								if(lastLogout > lastLogin){
 									long difference = lastLogout+maxInactiveDays;
@@ -89,6 +117,9 @@ public class main extends JavaPlugin  {
 								}
 							}
 						
+					}else{
+							Bukkit.getLogger().info("[InaciveRegions] It appears theres a region with a invalid owner name! -> Region Name: "+newList);
+							
 					}
 					
 					
@@ -96,7 +127,7 @@ public class main extends JavaPlugin  {
 			}
 			
 			player.sendMessage(ChatColor.DARK_GRAY + "------------------------------------------------");
-			player.sendMessage(ChatColor.RED + " Expired Regions List (90+ days with inactive owners)");
+			player.sendMessage(ChatColor.RED + " Expired Region/region s List (90+ days with inactive owners)");
 			player.sendMessage(ChatColor.DARK_GRAY + "------------------------------------------------");
 			
 			if(oNames.size() != 0){
@@ -107,6 +138,7 @@ public class main extends JavaPlugin  {
 			}else{
 				player.sendMessage(ChatColor.LIGHT_PURPLE+"There are currently no inactive regions!");
 			}
+			oNames.clear();
 			return true;	
 		}
 		return true;
