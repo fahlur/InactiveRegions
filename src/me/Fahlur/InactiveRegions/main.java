@@ -29,6 +29,44 @@ public class main extends JavaPlugin  {
 	PluginDescriptionFile pdfFile = this.getDescription();
 	List<String> oNames = new ArrayList<String>();
 	List<String> invalidNames = new ArrayList<String>();
+	List<String> page = new ArrayList<String>();
+	
+	static final int PAGELENGTH = 10;
+    
+    
+    public List<String> getPage(List<String> l, int pagenr)
+    {
+        
+     
+        
+        int listart = (pagenr - 1) * PAGELENGTH;
+        int liend  = listart + PAGELENGTH;
+     
+        for(int i=listart ; i<liend ;i++)
+        {
+            if(i < l.size())
+            {
+                page.add(l.get(i));
+            }
+            else
+            {
+                break;
+            }
+        }
+     
+        return page;
+    }
+	
+    
+    public void displayList(Player player, List<String> l)
+    {
+        for(int i=0 ; i<l.size() ; i++)
+        {
+            player.sendMessage(l.get(i));
+        }
+    }
+    
+    
 	
 	@Override
 	public void onEnable(){
@@ -79,7 +117,7 @@ public class main extends JavaPlugin  {
 
 		if(cmd.getName().equalsIgnoreCase("invalidregions")){
 			
-			int i = 0;
+			
 			RegionManager worldGuard = wg.getRegionManager(player.getWorld());
 			Map<String, ProtectedRegion> regionList = worldGuard.getRegions();
 			
@@ -91,10 +129,9 @@ public class main extends JavaPlugin  {
 					String owners = list.getValue().getOwners().toPlayersString().trim().replace("uuid:", "");
 					ProtectedRegion isChild = list.getValue().getParent();
 					
-					if(!owners.contains("timsandtoms") || !owners.contains("server") || owners == null || owners.isEmpty() || isChild == null){
+					if(!owners.contains("server") && owners.isEmpty() && isChild != null){
 					
-						player.sendMessage("[InaciveRegions] It appears theres a region with a invalid owner name! -> Region Name: "+newList);
-						i++;
+						invalidNames.add(newList);
 						
 					}
 					
@@ -102,11 +139,37 @@ public class main extends JavaPlugin  {
 				}
 			}
 			
-			player.sendMessage(ChatColor.DARK_GRAY + "------------------------------------------------");
-			player.sendMessage(ChatColor.RED + "[ " + ChatColor.WHITE + i + ChatColor.RED + " ]" + ChatColor.RED +" reported invalid owner(s)");
-			player.sendMessage(ChatColor.DARK_GRAY + "------------------------------------------------");
-			invalidNames.clear();
-			return true;
+			
+			
+			int pageNum = 1;
+			if (args.length == 1 && args[0].matches("[-+]?\\d+(\\.\\d+)?")==true){
+				pageNum = Integer.parseInt(args[0]);
+			}
+
+				if (pageNum == 0){
+					pageNum = 1;
+				}
+				
+				
+				
+				player.sendMessage(ChatColor.DARK_GRAY + "------------------------------------------------");
+				player.sendMessage(ChatColor.RED + "In-Valid Owner Regions List :: Page "+pageNum+" / " + ((invalidNames.size()/10)+1));
+				player.sendMessage(ChatColor.DARK_GRAY + "------------------------------------------------");
+				
+				displayList(player, getPage(invalidNames, pageNum));
+				page.clear();
+				if (invalidNames.size() == 0){
+					player.sendMessage(ChatColor.GRAY + "Currently No Invalid Region Owner Names!");
+				}
+				player.sendMessage(ChatColor.DARK_GRAY + "------------------------------------------------");
+				player.sendMessage(ChatColor.RED + "[ " + ChatColor.WHITE + invalidNames.size() + ChatColor.RED + " ]" + ChatColor.RED +" reported invalid owner(s)");
+				player.sendMessage(ChatColor.DARK_GRAY + "------------------------------------------------");
+
+				invalidNames.clear();
+				return true;
+				
+			
+			
 			
 			
 		}
@@ -115,7 +178,7 @@ public class main extends JavaPlugin  {
 		
 		if(cmd.getName().equalsIgnoreCase("oldregions")){
 			
-			int i = 1;
+			
 			RegionManager worldGuard = wg.getRegionManager(player.getWorld());
 			Map<String, ProtectedRegion> regionList = worldGuard.getRegions();
 			
@@ -130,7 +193,7 @@ public class main extends JavaPlugin  {
 					
 				
 					
-					if(!owners.contains("server") && owners != null && !owners.isEmpty() && isChild == null){
+					if(owners != null && !owners.isEmpty() && isChild == null){
 					
 							if(!owners.contains(",")){
 								if(!isUUID(owners)){
@@ -138,10 +201,7 @@ public class main extends JavaPlugin  {
 									owners = Bukkit.getServer().getOfflinePlayer(owners).getUniqueId().toString();
 								}
 
-
-									
-							
-									long maxInactiveDays = 7776000000L; //7776000000L
+									long maxInactiveDays = 0; //7776000000L
 									OfflinePlayer getPlayer = Bukkit.getServer().getOfflinePlayer(UUID.fromString(owners));
 									if(ess3.getUser(getPlayer) != null){
 										
@@ -152,7 +212,8 @@ public class main extends JavaPlugin  {
 											long difference = lastLogout+maxInactiveDays;
 											if(System.currentTimeMillis() > difference){
 												oNames.add(newList);
-											}					
+											}	
+											
 										
 										}
 									}
@@ -166,19 +227,42 @@ public class main extends JavaPlugin  {
 				}
 			}
 			
-			player.sendMessage(ChatColor.DARK_GRAY + "------------------------------------------------");
-			player.sendMessage(ChatColor.RED + " Expired Region/region s List (90+ days with inactive owners)");
-			player.sendMessage(ChatColor.DARK_GRAY + "------------------------------------------------");
 			
-			if(oNames.size() != 0){
-				for(String name : oNames){
-					player.sendMessage(i+". " + ChatColor.YELLOW + name);
-					i++;
-				}
-			}else{
-				player.sendMessage(ChatColor.LIGHT_PURPLE+"There are currently no inactive regions!");
+			
+			
+			
+			
+			
+			int pageNum = 1;
+			if (args.length == 1 && args[0].matches("[-+]?\\d+(\\.\\d+)?")==true){
+				pageNum = Integer.parseInt(args[0]);
 			}
+
+				if (pageNum == 0){
+					pageNum = 1;
+				}
+				
+				player.sendMessage(ChatColor.DARK_GRAY + "------------------------------------------------");
+				player.sendMessage(ChatColor.RED + " In-Active Owner Region(s) List :: Page "+pageNum+" / " + ((oNames.size()/10)+1));
+				player.sendMessage(ChatColor.DARK_GRAY + "------------------------------------------------");
+				
+				
+				displayList(player, getPage(oNames, pageNum));
+				page.clear();
+				if (oNames.size() == 0){
+					player.sendMessage(ChatColor.GRAY+"There are currently no inactive regions!");
+				}
+				player.sendMessage(ChatColor.DARK_GRAY + "------------------------------------------------");
+				player.sendMessage(ChatColor.RED + "[ " + ChatColor.WHITE + oNames.size() + ChatColor.RED + " ]" + ChatColor.RED +" reported in-active owner(s)");
+				player.sendMessage(ChatColor.DARK_GRAY + "------------------------------------------------");
+
 			oNames.clear();
+			
+			
+			
+			
+			
+			
 			return true;	
 		}
 		return true;
