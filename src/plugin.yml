@@ -1,5 +1,5 @@
 name: InactiveRegions
-version: 1.0.0
+version: SNAPSHOT_Build-x307a_08-05-2015
 description: Utility Plugin
 depend: [Vault]
 author: Fahlur
@@ -10,7 +10,10 @@ commands:
       description: Displays entire list of inactive regions
       aliases: [or]
       usage: /<command>
-    
+  inactiveregions:
+      description: Displays plugin version information
+      aliases: [ia]
+      usage: /<command>
 Permissions:
   InactiveRegionsList:
     description: Allows use of oldregions command
