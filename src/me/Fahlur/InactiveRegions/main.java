@@ -201,7 +201,7 @@ public class main extends JavaPlugin  {
 									owners = Bukkit.getServer().getOfflinePlayer(owners).getUniqueId().toString();
 								}
 
-									long maxInactiveDays = 0; //7776000000L
+									long maxInactiveDays = 7776000000L; //7776000000L
 									OfflinePlayer getPlayer = Bukkit.getServer().getOfflinePlayer(UUID.fromString(owners));
 									if(ess3.getUser(getPlayer) != null){
 										
