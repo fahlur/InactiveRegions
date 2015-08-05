@@ -23,16 +23,6 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class main extends JavaPlugin  {
 	
-	/*
-	 * ~~~ Developer Notes ~~~
-	 * + Need to make lists by command page index, say 5 items per page?, maybe 10?
-	 * + Need to make multi-owner checks a thing, make sure if any owner is active at all
-	 * + Need to make invalid owner command, report ALL invalid owners, no owner on main regions, 
-	 *   or invalid minecraft name, maybe a player never been on server name as well!
-	 * + Whitelist, including timed whitlist
-	 * 
-	 */
-	
 	Plugin plugin = this;
 	public static Essentials ess3 = null;
 	public static WorldGuardPlugin wg = null;
@@ -86,7 +76,7 @@ public class main extends JavaPlugin  {
 			player.sendMessage(ChatColor.GOLD + "Author(s): " + ChatColor.WHITE + pdfFile.getAuthors());
 			player.sendMessage(ChatColor.GOLD + "Description: " + ChatColor.WHITE + pdfFile.getDescription());
 		}
-	
+
 		if(cmd.getName().equalsIgnoreCase("invalidregions")){
 			
 			int i = 0;
