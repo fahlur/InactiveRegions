@@ -1,5 +1,5 @@
 name: InactiveRegions
-version: SNAPSHOT_Build-x307a_08-05-2015
+version: DEVELOPMENTAL_SNAPSHOT_Build-x307b_08-05-2015
 description: Utility Plugin
 depend: [Vault]
 author: Fahlur
