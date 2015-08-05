@@ -10,6 +10,10 @@ commands:
       description: Displays entire list of inactive regions
       aliases: [or]
       usage: /<command>
+  invalidregions:
+      description: Displays entire list of invalid owner regions
+      aliases: [ir]
+      usage: /<command>
   inactiveregions:
       description: Displays plugin version information
       aliases: [ia]
