@@ -1,28 +1,18 @@
 name: InactiveRegions
-version: DEVELOPMENTAL_SNAPSHOT_Build-x308c_08-07-2015
+version: DEVELOPMENTAL_SNAPSHOT_Build-x307c_09-08-2015
 description: Utility Plugin
 depend: [Vault]
 author: Fahlur
 main: me.Fahlur.InactiveRegions.main
 
 commands:
-  oldregions:
-      description: Displays entire list of inactive regions
-      aliases: [or]
-      usage: /<command>
-  invalidregions:
-      description: Displays entire list of invalid owner regions
-      aliases: [ir]
-      usage: /<command>
   inactiveregions:
       description: Main Command
       aliases: [ia]
       usage: /<command>
 Permissions:
-  ia.ListInactive:
-    description: Lists all inactive Regions
-  ia.ListInvalid:
-    description: Lists all invalid owners
+  ia.List:
+    description: Lists all inactive or invalid Regions
   ia.Whitelist:
     description: Use whitelisting tool
     
