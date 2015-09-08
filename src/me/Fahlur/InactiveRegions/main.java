@@ -36,6 +36,7 @@ public class main extends JavaPlugin  {
 	List<String> invalidNames = new ArrayList<String>();
 	List<String> pages = new ArrayList<String>();
 	
+	
 	static final int PAGELENGTH = 10;
     
 	public static boolean isInt(String s) {
@@ -188,6 +189,7 @@ public class main extends JavaPlugin  {
 
 				
 				String owners = list.getValue().getOwners().toPlayersString().trim().replace("uuid:", "");
+				
 				ProtectedRegion isChild = list.getValue().getParent();
 
 				if(owners != null && !owners.isEmpty() && isChild == null){
@@ -441,7 +443,7 @@ public class main extends JavaPlugin  {
 			
 			return true;
 		}
-		
+
 		
 		return true;
 	}
