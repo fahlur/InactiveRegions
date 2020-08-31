@@ -1,5 +1,5 @@
 name: Inactive Regions
-main: me.Fahlur.InactiveRegions.main
+main: me.Fahlur.InactiveRegions.Main
 version: 1.1.0
 author: Fahlur
 description: Inactive Regions Check
