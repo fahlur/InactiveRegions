@@ -120,12 +120,8 @@ public class main extends JavaPlugin {
 				ProtectedRegion isChild = list.getValue().getParent();
 
 				if (!owners.contains("server") && owners.isEmpty() && isChild != null) {
-
 					invalidNames.add(newList);
-
 				}
-
-
 			}
 		}
 
@@ -139,7 +135,7 @@ public class main extends JavaPlugin {
 		}
 
 		player.sendMessage(ChatColor.DARK_GRAY + "------------------------------------------------");
-		player.sendMessage(ChatColor.RED + "In-Valid Owner Regions List :: Page " + pageNum + " / " + ((invalidNames.size() / 10) + 1));
+		player.sendMessage(ChatColor.RED + "Invalid Owner Regions List :: Page " + pageNum + " / " + ((invalidNames.size() / 10) + 1));
 		player.sendMessage(ChatColor.DARK_GRAY + "------------------------------------------------");
 
 		displayList(player, getPage(invalidNames, pageNum));
