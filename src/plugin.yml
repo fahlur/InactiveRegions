@@ -8,5 +8,5 @@ depend: []
 
 commands:
   ia:
-      description: Plugin Main Command
-      usage: /<command>
+     description: Plugin Main Command
+     usage: /<command>
