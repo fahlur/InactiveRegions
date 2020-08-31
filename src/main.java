@@ -27,7 +27,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 
 public class main extends JavaPlugin {
 
-	Plugin plugin = this;
+	Plugin plugin;
 	public static Essentials ess3 = null;
 	public static WorldGuardPlugin wg = null;
 	PluginDescriptionFile pdfFile = this.getDescription();
@@ -82,6 +82,7 @@ public class main extends JavaPlugin {
 		loadConfiguration();
 		ess3 = (Essentials) getServer().getPluginManager().getPlugin("Essentials");
 		wg = (WorldGuardPlugin) getServer().getPluginManager().getPlugin("WorldGuard");
+		this.plugin = this;
 	}
 
 	public void onDisable() {
